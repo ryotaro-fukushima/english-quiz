@@ -1,9 +1,15 @@
-# Node.js
+# Node.js 関連
 node_modules/
 .next/
 .env.local
 
-# Go
+# Go 関連
 bin/
+pkg/
+go.sum
+go/pkg/
+go/pkg/mod/
+go/bin/
+go/pkg/mod/cache/
 *.exe
 *.log
