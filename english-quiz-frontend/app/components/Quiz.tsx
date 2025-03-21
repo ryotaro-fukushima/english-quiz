@@ -89,29 +89,37 @@ export default function Quiz({ mode }: { mode: "en-to-jp" | "jp-to-en" }) {
             {result && (
                 <div className="mt-6 p-6 w-full max-w-lg bg-white rounded-lg shadow-lg text-center">
                     {/* スコア部分 */}
-                    <p className="text-4xl font-bold text-gray-900">スコア: {result.score}点</p>
+                    <p className="text-4xl font-bold text-gray-900 bg-blue-100 px-4 py-2 rounded-lg inline-block">
+                        スコア: {result.score}点
+                    </p>
                     <p className="mt-2 text-lg text-gray-700 font-medium">{result.message}</p>
 
                     {/* 正誤リスト */}
                     <ul className="mt-4 space-y-2">
                         {questions.map((q, index) => {
-                            const key = mode === "en-to-jp" ? q.word : q.translations[0]; // 🔥 ここでキーを決定！
+                            const key = mode === "en-to-jp" ? q.word : q.translations[0];
+                            const isCorrect = result.results[key];
 
                             return (
                                 <li
                                     key={index}
-                                    className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm"
+                                    className={`flex justify-between items-center p-3 rounded-md shadow-sm ${isCorrect ? "bg-green-100" : "bg-red-100"
+                                        }`}
                                 >
                                     <div className="flex items-center space-x-2">
                                         <span className="text-lg font-semibold text-gray-900">{key}</span>
-                                        {/* 正解を表示 */}
-                                        {!result.results[key] && (
-                                            <span className="text-sm text-blue-500">（正解: {mode === "en-to-jp" ? q.translations.join(", ") : q.word}）</span>
+                                        {!isCorrect && (
+                                            <span className="text-sm text-blue-500">
+                                                （正解: {mode === "en-to-jp" ? q.translations.join(", ") : q.word}）
+                                            </span>
                                         )}
                                     </div>
                                     {/* 正誤アイコン */}
-                                    <span className={`text-2xl font-bold ${result.results[key] ? "text-green-500" : "text-red-500"}`}>
-                                        {result.results[key] ? "✔" : "✖"}
+                                    <span
+                                        className={`text-2xl font-bold ${isCorrect ? "text-green-500 animate-bounce" : "text-red-500"
+                                            }`}
+                                    >
+                                        {isCorrect ? "✔" : "✖"}
                                     </span>
                                 </li>
                             );
