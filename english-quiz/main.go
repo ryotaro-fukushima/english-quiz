@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -52,30 +54,43 @@ func checkAnswers(c *gin.Context) {
 		return
 	}
 
-	// 正解判定
+	fmt.Println("受け取ったデータ:", userAnswers) // ログで確認
+
 	correctCount := 0
 	results := make(map[string]bool)
 
 	for _, word := range words {
+		// 「英語 → 日本語」の場合（en-to-jp）
 		userAnswer, exists := userAnswers[word.Word]
-		if !exists {
-			continue
-		}
-
-		// 正解リストのいずれかに一致すれば正解
-		for _, correctTranslation := range word.Translations {
-			if userAnswer == correctTranslation {
-				correctCount++
-				results[word.Word] = true
-				break
+		if exists {
+			for _, correctTranslation := range word.Translations {
+				if strings.ToLower(strings.TrimSpace(userAnswer)) == strings.ToLower(strings.TrimSpace(correctTranslation)) {
+					correctCount++
+					results[word.Word] = true
+					break
+				}
+			}
+			if _, found := results[word.Word]; !found {
+				results[word.Word] = false
 			}
 		}
-		if _, found := results[word.Word]; !found {
-			results[word.Word] = false
+
+		// 「日本語 → 英語」の場合（jp-to-en）
+		for _, translation := range word.Translations {
+			userAnswer, exists := userAnswers[translation] // ← 日本語訳をキーにする！
+			if exists {
+				// `strings.ToLower()` と `strings.TrimSpace()` を使って正解と比較
+				if strings.ToLower(strings.TrimSpace(userAnswer)) == strings.ToLower(strings.TrimSpace(word.Word)) {
+					correctCount++
+					results[translation] = true
+				} else {
+					results[translation] = false
+				}
+			}
 		}
 	}
 
-	// スコアを計算
+	// スコア計算
 	score := (correctCount * 100) / len(words)
 	message := "もっと頑張ろう！"
 	if score >= 70 {
