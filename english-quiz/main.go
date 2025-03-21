@@ -28,15 +28,18 @@ var words = []struct {
 	{"book", []string{"本"}},
 }
 
+var rng = rand.New(rand.NewSource(time.Now().UnixNano()))
+
 // ランダムに10問取得
 func getQuestions(c *gin.Context) {
-	rand.Seed(time.Now().UnixNano())
 	shuffled := make([]struct {
 		Word         string   `json:"word"`
 		Translations []string `json:"translations"`
 	}, len(words))
 	copy(shuffled, words)
-	rand.Shuffle(len(shuffled), func(i, j int) { shuffled[i], shuffled[j] = shuffled[j], shuffled[i] })
+
+	// ✅ `rand.NewSource` を使ったランダム生成
+	rng.Shuffle(len(shuffled), func(i, j int) { shuffled[i], shuffled[j] = shuffled[j], shuffled[i] })
 
 	// 10問取得（wordsが10未満ならそのまま）
 	if len(shuffled) > 10 {
