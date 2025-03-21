@@ -32,7 +32,7 @@
 ### **1️⃣ バックエンド（Go）**
 
 ```sh
-cd englishapp
+cd english-quiz
 go run main.go
 ```
 
