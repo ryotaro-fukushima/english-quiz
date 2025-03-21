@@ -88,7 +88,7 @@ export default function Quiz({ mode }: { mode: "en-to-jp" | "jp-to-en" }) {
                 onClick={handleSubmit}
                 className="mt-6 bg-blue-500 text-white px-6 py-3 rounded-lg text-lg shadow-md hover:bg-blue-600 transition"
             >
-                送信
+                解答する
             </button>
 
             {result && (
