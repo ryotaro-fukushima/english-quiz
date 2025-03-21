@@ -26,9 +26,10 @@
 ```sh
 cd englishapp
 go run main.go
+```
 
 ### 2️⃣ **フロントエンド（Next.js）**
+```sh
 cd english-quiz-frontend
 npm install
 npm run dev
-
